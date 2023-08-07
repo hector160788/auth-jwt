@@ -28,33 +28,36 @@ public class JwtProvider {
 
 //metodo para crear el token con JWT
 	public String createToken(AuthUser authUser) {
-		Map<String, Object> claims = new HashMap<>();
-		claims = Jwts.claims().setSubject(authUser.getUserName());
-		claims.put("id", authUser.getId());
-		Date now = new Date();
-		Date exp = new Date(now.getTime() + 3600000);
-		return Jwts.builder().setClaims(claims).setIssuedAt(now).setExpiration(exp)
-				.signWith(SignatureAlgorithm.HS256, secret).compact();
-	}
+        Map<String, Object> claims = new HashMap<>();
+        claims = Jwts.claims().setSubject(authUser.getUserName());
+        claims.put("id", authUser.getId());
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + 3600000);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
 
 	// metodo para validar el token recibido
 	public boolean validate(String token) {
-		try {
-			Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 
 //metodo para obtener el nombre del usuario
-	public String getUserNameFromToken(String token) {
-		try {
-
-			return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
-		} catch (Exception e) {
-			return "bad token";
-		}
-	}
+	public String getUserNameFromToken(String token){
+        try {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
+        }catch (Exception e) {
+            return "bad token";
+        }
+    }
 
 }
